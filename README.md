@@ -18,5 +18,19 @@ Bem-vindo ao Projeto de Visão Computacional! Este projeto utiliza diversas téc
 ## Introdução
 
 ## Instalação
+Após clonar o repositório através do comando abaixo:
+
+```sh
+$ git clone
+```
+
+É necessário instalar as dependências necessárias para cada cenário. 
+
+```sh
+$ git clone
+$ cd scripts/cenario<numero>
+$ pip install -r requirements.txt
+```   
+
 
 ## Uso
