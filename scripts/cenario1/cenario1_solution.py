@@ -4,6 +4,7 @@ import base64
 import roslibpy
 import numpy as np
 from dotenv import load_dotenv
+from JoystickHelper import JoystickHelper
 from CamerasHelper import Camera1Helper, Camera2Helper
 
 load_dotenv()
@@ -16,30 +17,61 @@ Subscriber Test
 '''
 
 
-class Solver1(Camera1Helper, Camera2Helper):
+class Solver1(Camera1Helper, Camera2Helper, JoystickHelper):
    def __init__(self, host: str, port: int):
       self.host = host
       self.port = port
-      self.listeners: dict = {}
+      self.subscribers: dict = {}
 
-   def instantiate_client(self):
+   def instantiate_client(self) -> None:
       self.client: roslibpy.Ros = roslibpy.Ros(host=self.host, port=self.port)
       return
 
-   def setup_cameras_views(self) -> None:
-      self.subscribe_to_topic(cam_number=1, callback=self.process_camera1_message)
-      self.subscribe_to_topic(cam_number=2, callback=self.process_camera2_message)
+   def setup(self) -> None:
+      self.setup_listeners()
+      self.setup_talkers()
+      return 
+
+   def setup_listeners(self) -> None:
+      self.link_to_topic(
+         topic_name='game/cam1', 
+         message_type='sensor_msgs/CompressedImage'
+      )
+      self.subscribe_callback(
+         topic_name='game/cam1',
+         callback=self.process_camera1_message
+      )
+
+      self.link_to_topic(
+         topic_name='game/cam2', 
+         message_type='sensor_msgs/CompressedImage',
+      )
+      self.subscribe_callback(
+         topic_name='game/cam2',
+         callback=self.process_camera2_message
+      )
 
       return
 
-   def subscribe_to_topic(self, cam_number: int, callback: callable) -> None:
-      self.listeners[cam_number]: roslibpy.Topic = roslibpy.Topic(
-         self.client, 
-         f'game/cam{cam_number}', 
-         'sensor_msgs/CompressedImage'
+   def setup_talkers(self) -> None:
+      self.link_to_topic(
+         topic_name='game/joy', 
+         message_type='sensor_msgs/Joy',
       )
 
-      self.listeners[cam_number].subscribe(callback)
+      return
+
+   def link_to_topic(self, topic_name: str, message_type: str) -> None:
+      self.subscribers[topic_name]: roslibpy.Topic = roslibpy.Topic(
+         self.client, 
+         topic_name, 
+         message_type
+      )
+
+      return
+
+   def subscribe_callback(self, topic_name: str, callback: callable) -> None:
+      self.subscribers[topic_name].subscribe(callback)
 
       return
 
@@ -72,12 +104,12 @@ class Solver1(Camera1Helper, Camera2Helper):
 
       return cv2.imdecode(np_array, cv2.IMREAD_COLOR)
 
-   def run(self):
+   def run(self) -> None:
       self.client.run_forever()
 
-   def execute(self):
+   def execute(self) -> None:
       self.instantiate_client()
-      self.setup_cameras_views()
+      self.setup()
       self.run()
 
 
