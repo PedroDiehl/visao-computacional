@@ -70,7 +70,7 @@ class SolverCenario1(Camera1Helper, Camera2Helper, JoystickHelper):
 
       return
 
-   def subscribe_callback(self, topic_name: str, callback: callable) -> None:
+   def attach_listener_callback(self, topic_name: str, callback: callable) -> None:
       self.topics_connections[topic_name].subscribe(callback)
 
       return
