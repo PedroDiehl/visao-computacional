@@ -21,7 +21,7 @@ class SolverCenario1(Camera1Helper, Camera2Helper, JoystickHelper):
    def __init__(self, host: str, port: int):
       self.host = host
       self.port = port
-      self.subscribers: dict = {}
+      self.topics_connections: dict = {}
 
    def instantiate_client(self) -> None:
       self.client: roslibpy.Ros = roslibpy.Ros(host=self.host, port=self.port)
@@ -62,7 +62,7 @@ class SolverCenario1(Camera1Helper, Camera2Helper, JoystickHelper):
       return
 
    def link_to_topic(self, topic_name: str, message_type: str) -> None:
-      self.subscribers[topic_name]: roslibpy.Topic = roslibpy.Topic(
+      self.topics_connections[topic_name]: roslibpy.Topic = roslibpy.Topic(
          self.client, 
          topic_name, 
          message_type
@@ -71,7 +71,7 @@ class SolverCenario1(Camera1Helper, Camera2Helper, JoystickHelper):
       return
 
    def subscribe_callback(self, topic_name: str, callback: callable) -> None:
-      self.subscribers[topic_name].subscribe(callback)
+      self.topics_connections[topic_name].subscribe(callback)
 
       return
 
