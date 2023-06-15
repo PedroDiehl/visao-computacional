@@ -17,7 +17,7 @@ Subscriber Test
 '''
 
 
-class Solver1(Camera1Helper, Camera2Helper, JoystickHelper):
+class SolverCenario1(Camera1Helper, Camera2Helper, JoystickHelper):
    def __init__(self, host: str, port: int):
       self.host = host
       self.port = port
@@ -117,5 +117,5 @@ if __name__ == '__main__':
    ROS_HOST: str = os.getenv('ROS_HOST') 
    ROS_PORT: int = int(os.getenv('ROS_PORT'))
 
-   solver: Solver1 = Solver1(host=ROS_HOST, port=ROS_PORT)
+   solver: SolverCenario1 = SolverCenario1(host=ROS_HOST, port=ROS_PORT)
    solver.execute()
