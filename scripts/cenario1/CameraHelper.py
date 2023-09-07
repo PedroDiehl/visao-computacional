@@ -101,7 +101,7 @@ class CameraHelper:
 
       # Return the difference between the number of white pixels in each side
       difference = left_white_pixels - right_white_pixels
-      max_difference = left_side.shape[0] * left_side.shape[1] * 2 # Account for the negative values
+      max_difference = left_side.shape[0] * left_side.shape[1]
 
       return (difference, max_difference)
 
