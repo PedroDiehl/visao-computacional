@@ -32,9 +32,24 @@ class CameraHelper:
    def handle_image(self, image: np.ndarray):
       cv2.imshow('Received Image', image)
       identified_path_image = self.identify_path(image)
-      difference = self.calculate_difference(identified_path_image)
+      difference, max_difference = self.calculate_difference(identified_path_image)
+      #print(difference, max_difference, difference / max_difference)
+      self.joystick.joystick_action(difference, max_difference)
 
-      self.joystick.joystick_action(difference)
+      mapped_difference = difference / max_difference
+      self.draw_arrow(mapped_difference, image)
+
+      return
+
+   def draw_arrow(self, mapped_difference: float, image: np.ndarray):
+      # Draw a arrow scaled by mapped_difference
+      height, width, _ = image.shape
+      arrow_end = (int(width / 2), int(height / 2))
+      arrow_start = (int(width / 2 + mapped_difference * 500), int(height / 2))
+      cv2.arrowedLine(image, arrow_start, arrow_end, (0, 0, 255), thickness=5)
+
+      # Display the result
+      cv2.imshow('FLECHA', image)
 
       return
 
@@ -84,7 +99,11 @@ class CameraHelper:
       cv2.imshow('Left Side', left_side)
       cv2.imshow('Right Side', right_side)
 
-      return left_white_pixels - right_white_pixels
+      # Return the difference between the number of white pixels in each side
+      difference = left_white_pixels - right_white_pixels
+      max_difference = left_side.shape[0] * left_side.shape[1] * 2 # Account for the negative values
+
+      return (difference, max_difference)
 
 if __name__ == '__main__':
    ROS_HOST: str = os.getenv('ROS_HOST') 

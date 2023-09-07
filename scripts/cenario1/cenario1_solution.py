@@ -28,7 +28,7 @@ class SolverCenario1():
    def joystick_talker(self):
       self.joystic_helper = JoystickHelper(
          self.client, 
-         '/game/joy', 
+         '/game/joy',
          'sensor_msgs/Joy'
       )
       return
@@ -36,8 +36,8 @@ class SolverCenario1():
    def camera_subscriber(self):
       self.camera_helper = CameraHelper(
          self.client, 
-         '/game/cam1', 
-         'sensor_msgs/CompressedImage', 
+         '/game/cam1',
+         'sensor_msgs/CompressedImage',
          self.joystic_helper
       )
       return
