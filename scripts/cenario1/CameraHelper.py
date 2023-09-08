@@ -26,19 +26,18 @@ class CameraHelper:
 
       image = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
       self.handle_image(image)
-      cv2.waitKey(1)
       return
 
    def handle_image(self, image: np.ndarray):
       cv2.imshow('Received Image', image)
       identified_path_image = self.identify_path(image)
       difference, max_difference = self.calculate_difference(identified_path_image)
-      #print(difference, max_difference, difference / max_difference)
-      self.joystick.joystick_action(difference, max_difference)
 
       mapped_difference = difference / max_difference
       self.draw_arrow(mapped_difference, image)
+      cv2.waitKey(1)
 
+      #self.joystick.joystick_action(difference, max_difference)
       return
 
    def draw_arrow(self, mapped_difference: float, image: np.ndarray):
@@ -104,6 +103,7 @@ class CameraHelper:
       max_difference = left_side.shape[0] * left_side.shape[1]
 
       return (difference, max_difference)
+
 
 if __name__ == '__main__':
    ROS_HOST: str = os.getenv('ROS_HOST') 

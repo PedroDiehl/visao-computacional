@@ -26,7 +26,7 @@ class JoystickHelper:
       })
 
       self.talker.publish(joystick_message)
-      time.sleep(3)
+      time.sleep(1)
 
       return 
 
@@ -35,8 +35,10 @@ class JoystickHelper:
       # If difference is positive, the car is on the right side of the road and the steering value must be negative
       # If difference is zero, the car is on the center of the road and the steering value must be zero
       mapped_difference = difference / max_difference
+      steering = mapped_difference
+      SPEED = 0.2
 
-      return [mapped_difference, 0.02]
+      return [steering, SPEED]
 
 
 if __name__ == '__main__':
